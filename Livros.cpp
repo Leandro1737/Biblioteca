@@ -2,7 +2,6 @@
 #include <cstring>
 #include <limits>
 #include <cstdio>
-#include <string>
 using namespace std;
 
     struct emprestimos {
@@ -45,16 +44,16 @@ struct livros livro;
                     cout << "Digite o codigo do livro: ";
                     cin >> livro.codigo;
                     cout << "Digite a area do livro: ";
-                    cin.get(livro.area,30);
+                    cin.get(livro.area, 30);
                     cin.ignore(numeric_limits<streamsize>::max(),'\n');
                     cout << "Digite o titulo do livro: ";
-                    cin.get(livro.titulo,255);
+                    cin.get(livro.titulo, 255);
                     cin.ignore(numeric_limits<streamsize>::max(),'\n');
-                    cout >> "Digite o nome dos Autores: ";
-                    cin.get(livro.autores,255);
+                    cout << "Digite o nome dos Autores: ";
+                    cin.get(livro.autores, 255);
                     cin.ignore(numeric_limits<streamsize>::max(),'\n');
-                    cout >> "Digite o nome da Editora: ";
-                    cin.get(livro.editora,50);
+                    cout << "Digite o nome da Editora: ";
+                    cin.get(livro.editora, 50);
                     cin.ignore(numeric_limits<streamsize>::max(),'\n');
                     cout << "N paginas: ";
                     cin >> livro.paginas;
