@@ -5,15 +5,21 @@
 #include <string>
 using namespace std;
 
+    struct emprestimos {
+        char usuario[255],dt_emp[10],dt_devolucao[10];
+};
+
     struct livros{
         int codigo,paginas;
         char area[30],titulo[255], autores[255],editora[50];
         struct emprestimos emp;
 };
-    struct emprestimos {
-        char usuario[255],dt_emp[10],dt_devolucao[10];
-};
-int opc_princ, opc , cod, pos;
+
+int opc_princ, cod, pos;
+char opc ;
+
+FILE *arquivo;
+
 struct livros livro;
 
         int main(){
@@ -33,8 +39,45 @@ struct livros livro;
 
            switch (opc_princ){
             case 1:
+                cout << " Deseja cadastrar um livro (S ou N)";
+                cin >> opc;
+                while (opc == 'S' || opc == 's'){
+                    cout << "Digite o codigo do livro: ";
+                    cin >> livro.codigo;
+                    cout << "Digite a area do livro: ";
+                    cin.get(livro.area,30);
+                    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                    cout << "Digite o titulo do livro: ";
+                    cin.get(livro.titulo,255);
+                    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                    cout >> "Digite o nome dos Autores: ";
+                    cin.get(livro.autores,255);
+                    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                    cout >> "Digite o nome da Editora: ";
+                    cin.get(livro.editora,50);
+                    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                    cout << "N paginas: ";
+                    cin >> livro.paginas;
+
+                    arquivo = fopen("dados.dat", "ab");
+                    if (arquivo == NULL){
+                        arquivo = fopen("dados.dat", "wb");
+                    }
+
+                   if(fwrite(&livro,sizeof(struct livros),1,arquivo) ==1){
+                    cout << "Livro cadastrado com sucesso! ";
+                   }else{
+                    cout << "Erro ao cadastrar o livro! ";
+                   }
+                   fclose (arquivo);
+
+                   cin.ignore();
+                   cin.get();
 
 
+                    cout << " Deseja cadastrar um livro (S ou N)";
+                    cin >> opc;
+                }
 
                 break;
             case 2:
