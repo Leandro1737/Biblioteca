@@ -258,6 +258,30 @@ struct livros livro;
 
                 break;
             case 7:
+                arquivo = fopen("dados.dat", "rb");
+                if (arquivo != NULL){
+                    fread(&livro, sizeof(struct livros), 1, arquivo);
+                    while(!feof(arquivo)){
+                        if (strcmp(livro.emp.dt_emp, "") == 0){
+                            cout << "Código: " << livro.codigo << endl;
+                            cout << "Área: " << livro.area << endl;
+                            cout << "Título: " << livro.titulo << endl;
+                            cout << "Autor(es): " << livro.autores << endl;
+                            cout << "Editora: " << livro.editora << endl;
+                            cout << "Nº páginas: " << livro.paginas << endl;
+                            cout << "---------------------------------------" << endl;
+                        }
+                        fread(&livro, sizeof(struct livros), 1, arquivo);
+                    }
+                    fclose(arquivo);
+                    cin.ignore();
+                    cin.get();
+                } else {
+                    cout << "Erro ao abrir o banco de dados!";
+                    cin.ignore();
+                    cin.get();
+                }
+                break;
 
 
 
