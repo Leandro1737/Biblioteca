@@ -14,7 +14,7 @@ using namespace std;
         struct emprestimos emp;
 };
 
-int opc_princ, cod, pos;
+int opc_princ, cod, pos,opc1;
 char opc ;
 
 FILE *arquivo, *arqreserva;
@@ -35,28 +35,36 @@ struct livros livro;
         cout << "9 - Sair" << endl << endl;
         cout << "Digite a opcao desejada: ";
         cin >> opc_princ;
+        cin.ignore();
 
-           switch (opc_princ){
+        switch (opc_princ){
             case 1:
                 cout << " Deseja cadastrar um livro (S ou N)";
                 cin >> opc;
                 while (opc == 'S' || opc == 's'){
                     cout << "Digite o codigo do livro: ";
                     cin >> livro.codigo;
+                    cin.ignore();
+
                     cout << "Digite a area do livro: ";
                     cin.get(livro.area, 30);
                     cin.ignore(numeric_limits<streamsize>::max(),'\n');
+
                     cout << "Digite o titulo do livro: ";
                     cin.get(livro.titulo, 255);
                     cin.ignore(numeric_limits<streamsize>::max(),'\n');
+
                     cout << "Digite o nome dos Autores: ";
                     cin.get(livro.autores, 255);
                     cin.ignore(numeric_limits<streamsize>::max(),'\n');
+
                     cout << "Digite o nome da Editora: ";
                     cin.get(livro.editora, 50);
                     cin.ignore(numeric_limits<streamsize>::max(),'\n');
+
                     cout << "N paginas: ";
                     cin >> livro.paginas;
+                    cin.ignore();
 
                     arquivo = fopen("dados.dat", "ab");
                     if (arquivo == NULL){
@@ -70,45 +78,93 @@ struct livros livro;
                    }
                    fclose (arquivo);
 
-                   cin.ignore();
-                   cin.get();
-
-
-                    cout << " Deseja cadastrar um livro (S ou N)";
+                    cout << " Deseja cadastrar outro livro (S ou N)";
                     cin >> opc;
                 }
 
                 break;
             case 2:
-                arquivo = fopen("dados.dat","rb+");
-                if(arquivo != NULL){
-                  cout << "Digite o codigo do livro que deseja alterar: ";
-                  cin >> cod;
-                  cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                 arquivo = fopen("dados.dat", "rb+"); // Abre o arquivo para leitura e escrita
+    if (arquivo != NULL) {
+        cout << "Digite o codigo do livro que deseja alterar: ";
+        cin >> cod;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-                  pos = -1;
-                  while(!feof(arquivo)){
+        pos = -1;
+        bool livro_encontrado = false;
 
-                    fread(&livro,sizeof(struct livros),1,arquivo);
-                    pos++;
-                    if(cod == livro.codigo ){
-                        cout << "Digite onde voce quer alterar"<< endl << endl;
-                        cout << "opção 1 - Titulo" << endl;
-                        cout << "opção 2 - Area" << endl;
-                        cout << "opção 3 - Autore" << endl;
-                        cout << "opção 4 - Editora" << endl;
-                        cout << "opção 5 - Numero de Paginas" << endl;
+        while (fread(&livro, sizeof(struct livros), 1, arquivo) == 1) {
+            pos++;
+            if (cod == livro.codigo) {
+                livro_encontrado = true;
+                cout << "Livro encontrado! Você pode alterar os seguintes campos:" << endl;
+                cout << "1 - Titulo" << endl;
+                cout << "2 - Area" << endl;
+                cout << "3 - Autores" << endl;
+                cout << "4 - Editora" << endl;
+                cout << "5 - Numero de Paginas" << endl;
+                cout << "6 - Sair" << endl;
 
+                do {
+                    cout << "Escolha a opção: ";
+                    cin >> opc1;
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-                        fwrite(&livro,sizeof(struct livros)*pos,arquivo) // define onde ira ser alterado
+                    switch (opc1) {
+                        case 1: {
+                            char tit_novo[255];
+                            cout << "Digite o novo titulo: ";
+                            cin.get(tit_novo, 255);
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            strcpy(livro.titulo, tit_novo); // Atualiza o título
+                            break;
+                        }
+                        case 2:
+                            cout << "Digite a nova area: ";
+                            cin.get(livro.area, 30);
+                            break;
 
+                        case 3:
+                            cout << "Digite os novos autores: ";
+                            cin.get(livro.autores, 255);
+                            break;
 
+                        case 4:
+                            cout << "Digite a nova editora: ";
+                            cin.get(livro.editora, 50);
+                            break;
+
+                        case 5:
+                            cout << "Digite o novo numero de paginas: ";
+                            cin >> livro.paginas;
+                            cin.ignore();
+                            break;
+
+                        case 6:
+                            cout << "Saindo da alteração." << endl;
+                            break;
+
+                        default:
+                            cout << "Opcao invalida! Tente novamente." << endl;
+                            break;
                     }
 
-                  }
+                    // Atualiza o livro no arquivo após cada alteração
+                    fseek(arquivo, sizeof(struct livros) * pos, SEEK_SET);
+                    fwrite(&livro, sizeof(struct livros), 1, arquivo);
+                } while (opc1 != 6);
 
-
-                }
+                cout << "Alteracao encerrada." << endl;
+            }
+        }
+        if (!livro_encontrado) {
+            cout << "Livro não encontrado!" << endl;
+        }
+        fclose(arquivo);
+    } else {
+        cout << "Erro ao abrir o arquivo!" << endl;
+    }
+    break;
 
 
 
