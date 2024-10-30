@@ -287,9 +287,23 @@ struct livros livro;
 
                 break;
             case 8:
-
-
-
+                arquivo = fopen("dados.dat", "rb");
+                if (arquivo != NULL) {
+                    while (fread(&livro, sizeof(struct livros), 1, arquivo) == 1) {
+                        cout << "Código: " << livro.codigo << endl;
+                        cout << "Área: " << livro.area << endl;
+                        cout << "Título: " << livro.titulo << endl;
+                        cout << "Autor(es): " << livro.autores << endl;
+                        cout << "Editora: " << livro.editora << endl;
+                        cout << "Nº páginas: " << livro.paginas << endl;
+                        cout << "---------------------------------------" << endl;
+                    }
+                    fclose(arquivo);
+                    cin.ignore();
+                    cin.get();
+                } else {
+                    cout << "Erro ao abrir o banco de dados!" << endl;
+                }
                 break;
             case 9:
                 cout << "Ecerrado o programa! " << endl;
