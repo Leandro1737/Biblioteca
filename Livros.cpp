@@ -198,9 +198,32 @@ struct livros livro;
                 }
                 break;
             case 5:
+                  arquivo = fopen("dados.dat", "rb+");
+                if (arquivo != NULL){
+                    cout << "Digite o código do livro que deseja devolver: ";
+                    cin >> cod;
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
+                    pos = -1;
+                    while(!feof(arquivo)){
+                        fread(&livro, sizeof(struct livros), 1, arquivo);
+                        pos++;
+                        if (cod == livro.codigo){
+                            fseek(arquivo, sizeof(struct livros) * pos, SEEK_SET);
+                            strcpy(livro.emp.dt_emp, "");
+                            strcpy(livro.emp.dt_devolucao, "");
+                            strcpy(livro.emp.usuario, "");
+                            fwrite(&livro, sizeof(struct livros), 1, arquivo);
+                            break;
+                        }
+                    }
+                    fclose(arquivo);
 
-
+                } else {
+                    cout << "Erro ao abrir o banco de dados!";
+                    cin.ignore();
+                    cin.get();
+                }
                 break;
             case 6:
 
