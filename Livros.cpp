@@ -85,16 +85,15 @@ struct livros livro;
                 break;
             case 2:
                  arquivo = fopen("dados.dat", "rb+"); // Abre o arquivo para leitura e escrita
-    if (arquivo != NULL) {
-        cout << "Digite o codigo do livro que deseja alterar: ";
-        cin >> cod;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                if (arquivo != NULL) {
+                cout << "Digite o codigo do livro que deseja alterar: ";
+                cin >> cod;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        pos = -1;
+          int pos =0;
         bool livro_encontrado = false;
 
         while (fread(&livro, sizeof(struct livros), 1, arquivo) == 1) {
-            pos++;
             if (cod == livro.codigo) {
                 livro_encontrado = true;
                 cout << "Livro encontrado! Você pode alterar os seguintes campos:" << endl;
@@ -153,9 +152,8 @@ struct livros livro;
                     fseek(arquivo, sizeof(struct livros) * pos, SEEK_SET);
                     fwrite(&livro, sizeof(struct livros), 1, arquivo);
                 } while (opc1 != 6);
-
-                cout << "Alteracao encerrada." << endl;
             }
+            pos++;
         }
         if (!livro_encontrado) {
             cout << "Livro não encontrado!" << endl;
@@ -166,30 +164,38 @@ struct livros livro;
     }
     break;
             case 3:
-                cout << "Digite o código do livro que deseja excluir: ";
-                cin >> cod;
-                arquivo = fopen("dados.dat", "rb");
-                arqreserva = fopen("dados.aux", "wb");
+ arquivo = fopen("dados.dat", "rb+");
+                if (arquivo != NULL){
+                    cout << "Digite o código do livro que deseja emprestar: ";
+                    cin >> cod;
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-                fread(&livro, sizeof(struct livros), 1, arquivo);
-                while(!feof(arquivo)){
-                    if (cod != livro.codigo){
-                        fwrite(&livro, sizeof(struct livros), 1, arqreserva);
+                    pos = -1;
+                    while(!feof(arquivo)){
+                        fread(&livro, sizeof(struct livros), 1, arquivo);
+                        pos++;
+                        if (cod == livro.codigo){
+                            fseek(arquivo, sizeof(struct livros) * pos, SEEK_SET);
+                            cout << "Data de empréstimo: ";
+                            cin.get(livro.emp.dt_emp, 10);
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            cout << "Data de devolução: ";
+                            cin.get(livro.emp.dt_devolucao, 10);
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            cout << "Usuário: ";
+                            cin.get(livro.emp.usuario, 255);
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            fwrite(&livro, sizeof(struct livros), 1, arquivo);
+                            break;
+                        }
                     }
-                    fread(&livro, sizeof(struct livros), 1, arquivo);
+                    fclose(arquivo);
+
+                } else {
+                    cout << "Erro ao abrir o banco de dados!";
+                    cin.ignore();
+                    cin.get();
                 }
-
-                fclose(arquivo);
-                fclose(arqreserva);
-                remove("dados.dat");
-                rename("dados.aux", "dados.dat");
-
-
-                break;
-            case 4:
-
-
-
                 break;
             case 5:
 
