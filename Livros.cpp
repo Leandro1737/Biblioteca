@@ -226,6 +226,33 @@ struct livros livro;
                 }
                 break;
             case 6:
+                arquivo = fopen("dados.dat", "rb");
+                if (arquivo != NULL){
+                    cout << "Digite o código do livro que deseja pesquisar: ";
+                    cin >> cod;
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                    while(!feof(arquivo)){
+                        fread(&livro, sizeof(struct livros), 1, arquivo);
+                        if (cod == livro.codigo){
+                            cout << "Código: " << livro.codigo << endl;
+                            cout << "Área: " << livro.area << endl;
+                            cout << "Título: " << livro.titulo << endl;
+                            cout << "Autor(es): " << livro.autores << endl;
+                            cout << "Editora: " << livro.editora << endl;
+                            cout << "Nº páginas: " << livro.paginas << endl;
+                            cin.get();
+                            break;
+                        }
+                    }
+                    fclose(arquivo);
+
+                } else {
+                    cout << "Erro ao abrir o banco de dados!";
+                    cin.ignore();
+                    cin.get();
+                }
+                break;
 
 
 
