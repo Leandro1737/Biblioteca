@@ -165,12 +165,24 @@ struct livros livro;
         cout << "Erro ao abrir o arquivo!" << endl;
     }
     break;
-
-
-
-                break;
             case 3:
+                cout << "Digite o código do livro que deseja excluir: ";
+                cin >> cod;
+                arquivo = fopen("dados.dat", "rb");
+                arqreserva = fopen("dados.aux", "wb");
 
+                fread(&livro, sizeof(struct livros), 1, arquivo);
+                while(!feof(arquivo)){
+                    if (cod != livro.codigo){
+                        fwrite(&livro, sizeof(struct livros), 1, arqreserva);
+                    }
+                    fread(&livro, sizeof(struct livros), 1, arquivo);
+                }
+
+                fclose(arquivo);
+                fclose(arqreserva);
+                remove("dados.dat");
+                rename("dados.aux", "dados.dat");
 
 
                 break;
