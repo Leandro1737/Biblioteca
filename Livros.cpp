@@ -17,7 +17,7 @@ using namespace std;
 int opc_princ, cod, pos;
 char opc ;
 
-FILE *arquivo;
+FILE *arquivo, *arqreserva;
 
 struct livros livro;
 
@@ -80,6 +80,35 @@ struct livros livro;
 
                 break;
             case 2:
+                arquivo = fopen("dados.dat","rb+");
+                if(arquivo != NULL){
+                  cout << "Digite o codigo do livro que deseja alterar: ";
+                  cin >> cod;
+                  cin.ignore(numeric_limits<streamsize>::max(),'\n');
+
+                  pos = -1;
+                  while(!feof(arquivo)){
+
+                    fread(&livro,sizeof(struct livros),1,arquivo);
+                    pos++;
+                    if(cod == livro.codigo ){
+                        cout << "Digite onde voce quer alterar"<< endl << endl;
+                        cout << "opção 1 - Titulo" << endl;
+                        cout << "opção 2 - Area" << endl;
+                        cout << "opção 3 - Autore" << endl;
+                        cout << "opção 4 - Editora" << endl;
+                        cout << "opção 5 - Numero de Paginas" << endl;
+
+
+                        fwrite(&livro,sizeof(struct livros)*pos,arquivo) // define onde ira ser alterado
+
+
+                    }
+
+                  }
+
+
+                }
 
 
 
